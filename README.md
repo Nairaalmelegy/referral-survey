@@ -1,5 +1,4 @@
 
-```
 # Referral Survey Backend
 
 This is the backend service for the **Referral Survey** project.  
@@ -30,7 +29,6 @@ src/
 
 ````
 
----
 
 ## ⚙️ Setup & Installation
 
@@ -38,7 +36,7 @@ src/
    ```bash
    git clone https://github.com/your-username/referral-survey-backend.git
    cd referral-survey-backend
-````
+``
 
 2. **Install dependencies**
 
