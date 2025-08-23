@@ -1,0 +1,154 @@
+  <html lang="ar" dir="rtl">
+    <head>
+        <title>Fadtaxi</title>
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/all.css">
+        <meta charset="UTF-8">
+
+        <!-- <meta name="keywords" content="HTML5, CSS3, JavaScript, PHP, MySQL, Bootstrap, jQuery, Ajax, JSON, XML, Web Development, Web Design"> -->
+        <!-- <meta name="description" content="A simple HTML5 page with CSS3 and JavaScript."> -->
+
+        
+       <link rel="stylesheet" href="css/bootstrap.min.css">
+
+       <!-- <script>
+
+       </script> -->
+
+    </head>
+    <body>
+        
+        <header class="d-flex justify-content-between">
+             
+            <img src="Images/logo.jpg" alt="" class="logo">
+            <button class="btn whats"><i class="fa-brands fa-whatsapp"></i></button>
+        </header>
+
+        <section class="sec1">
+            <div class="container">
+                <img src="Images/img3.png" alt="">
+                <img class="small" src="Images/img1.jpg" alt="">
+            </div>
+        </section>
+
+        <section class="sec2">
+            <div class="container">
+                <form class="questions">
+                    <div class="q1 q">
+                        <label class="pt-2"><h4>من وين عرفت عن فد تكسي؟
+                        </h4></label>
+                        <button answer="answer1" class="btn mt-3" id="a1">صديق/أهل</button>
+                        <button answer="answer2" class="btn mt-3" id="a2" >مواقع التواصل الاجتماعي</button>
+                        <button answer="answer3" class="btn mt-3" id="a3">إعلان</button>
+                        <button answer="answer4" class="btn mt-3" id="a4">غير ذلك</button>
+                    </div>
+                    <div class="q2 q">
+                        <label class="pt-2"><h4>هل جربت خدمة فد تكسي من قبل؟</h4></label>
+                        <button answer="answer1" class="btn mt-3">نعم</button>
+                        <button answer="answer2" class="btn mt-3">لا</button>
+                    </div>
+                    <div class="q3 q">
+                        <label class="pt-2"><h4>إذا جربت الخدمة، شلون تقيم تجربتك بشكل عام؟</h4></label>
+                        <button answer="answer1" class="btn mt-3">ممتازة ⭐⭐⭐⭐⭐</button>
+                        <button answer="answer2" class="btn mt-3">جيدة ⭐⭐⭐⭐</button>
+                        <button answer="answer3" class="btn mt-3">مقبولة ⭐⭐⭐</button>
+                        <button answer="answer4" class="btn mt-3">ضعيفة ⭐⭐<button>
+                        <button answer="answer5" class="btn mt-3">سيئة ⭐</button>
+
+                    </div>
+                    <div class="q4 q">
+                        <label class="pt-2"><h4> برأيك أسعار فد تكسي شلون؟</h4></label>
+                        <button answer="answer1" class="btn mt-3">مناسبة</button>
+                        <button answer="answer2" class="btn mt-3">غالية</button>
+                        <button answer="answer3" class="btn mt-3">رخيصة</button>
+                    </div>
+                    <div class="q5 q">
+                        <label class="pt-2"><h4> تعامل الكباتن وياك شلون تقيمه؟</h4></label>
+                        <button answer="answer1" class="btn mt-3">ممتاز ⭐⭐⭐⭐⭐</button>
+                        <button answer="answer2" class="btn mt-3">جيد ⭐⭐⭐⭐</button>
+                        <button answer="answer3" class="btn mt-3">مقبول ⭐⭐⭐</button>
+                        <button answer="answer4" class="btn mt-3">سيء ⭐<button>
+
+                    </div>
+                    <div class="q6 q">
+                        <label class="pt-2"><h4> شنو رأيك بسرعة وصول الكابتن؟</h4></label>
+                        <button data-bs-toggle="modal" data-bs-target="#myModal" answer="answer1" class="btn mt-3">سريع</button>
+                        <button data-bs-toggle="modal" data-bs-target="#myModal" answer="answer2" class="btn mt-3">متوسط</button>
+                        <button data-bs-toggle="modal" data-bs-target="#myModal" answer="answer3" class="btn mt-3">يتأخر</button>
+                    </div>
+                    <div class="num-of-q mt-3 pb-3 d-flex justify-content-between w-sm-50">
+                        <div class="c1 p-active"></div>
+                        <div class="c2"></div>
+                        <div class="c3 "></div>
+                        <div class="c4"></div>
+                        <div class="c5"></div>
+                        <div class="c6"></div>
+                    </div>
+
+                    <div class="answerd pb-4 d-none">
+                        <h4 class="pt-3">أدخل المعلومات التالية بشكل صحيح</h4>
+                        <div>
+                            <form class="needs-validation">
+                                <label class="fw-bold">الإسم :</label>
+                                <input id="name" class="mt-1" type="text" placeholder="أدخل اسمك الثلاثي" required>
+                                <div class="invalid-feedback invalid-name me-1 fw-bold">
+                                    الرجاء كتابة الإسم
+                                </div>
+
+                                <label class="mt-3 fw-bold">رقم الجوال :</label>
+                                <input id="number" class="mt-1" type="tel" placeholder="أدخل رقم الجوال" required>
+                                <div class="invalid-feedback invalid-number me-1 fw-bold">
+                                   الرجاء كتابة رقم الجوال
+                                </div>
+
+                                <input id="info-btn" type="submit" value="تأكيد" class="mt-4 btn d-block fw-bold">
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="reward pb-4 d-none">
+                        <h4 class="pt-4">Message</h4>
+                        <button class="btn d-block m-auto mt-4" id="copylink">Click here to copy the link</button>
+                    </div>
+
+                    
+                </form>
+            </div>
+        </section>
+
+
+        <div class="modal" id="myModal">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">تهانينا !!</h4>
+                    <button type="button" class="btn-close ms-0" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    لقد أكملت الإستفتاء بنجاح 
+                    عليك فقط كتابة معلوماتك بشكل صحيح و ستحظى بفرصة الحصول على رحلة مجانية !
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn" data-bs-dismiss="modal">إغلاق</button>
+                </div>
+
+                </div>
+            </div>
+        </div>
+                
+
+
+
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/script.js"></script>
+    </body>
+</html>

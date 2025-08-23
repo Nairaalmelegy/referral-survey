@@ -1,0 +1,210 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+@font-face {
+  font-family: 'Noto Kufi Arabic';
+  src: url('../webfonts/Noto_Kufi_Arabic/NotoKufiArabic-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Beiruti';
+  src: url('../webfonts/Beiruti/Beiruti-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+}
+/* body {
+   
+} */
+header{
+    background-color: #26356e;
+    height:75px;
+    padding: 10px 0;
+
+}
+.btn{
+    background-color: #F7DB6E !important;
+    color: black !important;
+    border-color: #F7DB6E !important ;
+
+}
+.whats{
+    color: white !important;
+    background-color: #249D11 !important;
+    font-size:30px !important;
+    height: 90% !important;
+    border-radius: 50% !important;
+    margin-left: 15px !important;
+    border-color: #249D11 !important;
+}
+
+.logo {
+    display: block;
+    margin-left: auto;
+    height: 110%;
+    margin-top: -10px;
+    margin-right: 12px;
+}
+.questions{
+    background-color: #26356e;
+    border-radius: 10px;
+    margin-top: 300px;
+}
+.questions label{
+    display: block;
+}
+.questions label h4{
+    text-align: center;
+    color: white;
+}
+
+.questions .q button{
+    display: block;
+    margin: auto;
+    width: 90%;
+}
+.num-of-q{
+    width: 200px;
+    margin: auto;
+}
+.num-of-q div{
+    background-color: white;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+}
+div.p-active{
+    background-color: #F7DB6E;
+}
+.q{
+    display: none;
+}
+.q1{
+    display: block;
+}
+.answerd h4 {
+    text-align: center;
+    color: white;
+}
+
+.answerd div {
+    margin: auto;
+    width: 90%;           
+    border-radius: 10px;
+}
+
+.answerd div label{
+    color: white;
+    display: block;    
+    margin-top: 10px;
+}
+
+.answerd div input{
+    width: 100%;
+    height: 40px;
+    padding-right: 8px;
+    border: 0;
+    border-radius: 3px;
+    margin-top: 5px;
+}
+
+.container{
+    overflow: hidden;
+    border-radius: 10px;
+}
+.reward{
+    margin: auto;
+    width: 100%;
+    background-color: #26356e;
+    border-radius: 10px;
+}
+.reward h4{
+    text-align: center;
+    color: white;
+}
+input[type="tel"]{
+    padding-left: 15px
+}
+input[type="tel"]::placeholder{
+    position: absolute;
+    right: 0px;
+    padding-right: 8.5px;
+}
+
+
+/* ///////////////////////////////////////////////////////// */
+
+@media (min-width:200px){
+.container img{
+display: none;
+
+}
+.sec1 {
+    margin-top:15px;
+    border-radius: 10px;
+}
+.sec2{
+    margin-top: -280px;
+}
+.small{
+    display: block !important;
+    width: 100%;
+    margin-top: -95%;
+    border-radius: 0 0 15px 15px;
+}
+}
+@media (min-width: 768px) {
+
+.container img{
+    display: block;
+    width: 100%;
+    border-radius: 0 0 15px 15px;
+}
+.sec1 {
+    margin-top:20px;
+    border-radius: 10px;
+}
+.sec2{
+    margin-top: -260px;
+}
+.small{
+    display: none !important;
+}
+    
+}
+@media (min-width: 850px) {
+.container img{
+    width: 100%;
+    margin-top: -10%;
+    border-radius: 25px;
+}
+.sec1 {
+    margin-top:20px;
+    border-radius: 10px;
+}
+.sec2{
+    margin-top: -260px;
+}
+.small{
+    display: none !important;
+}
+}
+@media (min-width: 1200px) {
+    .container img{
+    width: 100%;
+    margin-top: -22%;
+    border-radius: 25px;
+}
+.sec1 {
+    margin-top:20px;
+    border-radius: 10px;
+}
+.sec2{
+    margin-top: -250px;
+}
+.small{
+    display: none !important;
+}
+}
