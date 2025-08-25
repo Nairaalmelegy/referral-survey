@@ -10,7 +10,7 @@ const app = express();
 app.use(helmet());
 // app.use(cors({ origin: true, credentials: true }));
 const allowedOrigins = [
-  "https://referral-survey-j2hc-5tegsuqcs-nairaalmelegys-projects.vercel.app", // our frontend
+  "https://referral-survey-phi.vercel.app", // our frontend
   "http://localhost:3000", // dev
 ];
 
