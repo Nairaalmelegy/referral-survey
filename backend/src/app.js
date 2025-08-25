@@ -18,9 +18,11 @@ app.use(helmet());
 //   credentials: true
 // }));
 
+// ✅ Allow your frontend domain
 app.use(cors({
-  origin: "*",
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+  origin: "https://referral-survey-622ixo544-nairaalmelegys-projects.vercel.app",
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type"]
 }));
 
 
@@ -44,6 +46,11 @@ app.use(
 
 
 app.get("/health", (_req, res) => res.json({ ok: true }));
+
+// Your routes...
+app.post("/api/survey/submit", (req, res) => {
+  res.json({ message: "Survey submitted!" });
+});
 
 app.use("/api/survey", surveyRoutes);
 

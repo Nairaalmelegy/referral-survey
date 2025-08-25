@@ -8,6 +8,7 @@
     "node": ">=18"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "mongoose": "^8.7.0",
     "nanoid": "^5.0.7",
     "nodemailer": "^6.9.13",

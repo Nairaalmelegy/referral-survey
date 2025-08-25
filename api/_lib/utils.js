@@ -36,14 +36,23 @@ async function sendRewardEmail(toEmail, { refCode, count, baseUrl }) {
 }
 
 function withCORS(req, res) {
-  const conf = process.env.CORS_ORIGIN || "*";
-  const origin = conf === "auto" ? (req.headers.origin || "*") : conf;
-  res.setHeader("Access-Control-Allow-Origin", origin);
-  // Only send Allow-Credentials when origin is not wildcard
-  if (origin !== "*") {
+  // Allow your specific frontend domain
+  const allowedOrigins = [
+    "https://referral-survey-622ixo544-nairaalmelegys-projects.vercel.app",
+    "https://referral-survey.vercel.app",
+    "http://localhost:3000" // for local development
+  ];
+  
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
     res.setHeader("Access-Control-Allow-Credentials", "true");
+  } else {
+    // Fallback for development or if origin doesn't match
+    res.setHeader("Access-Control-Allow-Origin", "*");
   }
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.setHeader("Vary", "Origin");
 }
