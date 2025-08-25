@@ -8,24 +8,24 @@ const surveyRoutes = require("./routes/survey.routes");
 const app = express();
 
 app.use(helmet());
-// app.use(cors({ origin: true, credentials: true }));
-const allowedOrigins = [
-  "https://referral-survey-phi.vercel.app", // our frontend
-  "http://localhost:3000", // dev
-];
+app.use(cors());
+// const allowedOrigins = [
+//   "https://referral-survey-phi.vercel.app", // our frontend
+//   "http://localhost:3000", // dev
+// ];
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       if (!origin || allowedOrigins.includes(origin)) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//     credentials: true,
+//   })
+// );
 app.use(express.json({ limit: "1mb" }));
 app.use(morgan("dev"));
 
