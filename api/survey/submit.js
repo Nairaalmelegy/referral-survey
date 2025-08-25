@@ -40,6 +40,34 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: "Provide at least phone or email." });
     }
 
+    // Check if user already exists
+    let existingUser = null;
+    if (payload.phone) {
+      existingUser = await User.findOne({ phone: payload.phone });
+    } else if (payload.email) {
+      existingUser = await User.findOne({ email: payload.email });
+    }
+
+    if (existingUser) {
+      // User already exists, return their existing data
+      console.log("🔍 User already exists, returning existing data");
+      const shareLink = `${BASE_URL}/?ref=${existingUser.referralCode}`;
+      
+      return res.status(200).json({
+        message: "Welcome back! Here's your existing referral link",
+        referralCode: existingUser.referralCode,
+        shareLink,
+        isExistingUser: true,
+        existingReferralsCount: existingUser.referralsCount
+      });
+    }
+
+    // For new users, require survey answers
+    if (!payload.answers || Object.keys(payload.answers).length === 0) {
+      return res.status(400).json({ error: "Survey answers are required for new users." });
+    }
+
+    // Create new user only if they don't exist
     const referralCode = generateReferralCode();
 
     const user = await User.create({

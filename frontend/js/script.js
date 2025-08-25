@@ -24,16 +24,22 @@ if (referralFromUrl) {
     }
 }
 
+// Check if user has already completed the survey
+const hasCompletedSurvey = localStorage.getItem("currentStep") === "reward";
+const hasSurveyAnswers = localStorage.getItem("surveyAnswers");
+
 if (currentStep === "info") {
     numOfqdiv.classList.add("d-none");
     questions[0].style.display = "none";
     info.classList.remove("d-none");
-} else if (currentStep === "reward") {
+} else if (currentStep === "reward" && hasCompletedSurvey) {
+    // Only show reward page if user has actually completed the survey
     numOfqdiv.classList.add("d-none");
     info.classList.add("d-none");
     questions[0].style.display = "none";
     reward.classList.remove("d-none");
 } else {
+    // Show survey questions (either new user or user with referral link)
     questions[0].style.display = "block";
     numOfq[0].classList.add("p-active");
 }
@@ -123,6 +129,57 @@ async function refreshProgress(referralCode) {
     }
 }
 
+// --- Integration: function to check if user already completed survey ---
+async function checkExistingUser(phone, email) {
+    try {
+        const payload = {
+            phone: phone || undefined,
+            email: email || undefined,
+            answers: {}, // Empty answers to check if user exists
+            ref: localStorage.getItem("refCode") || undefined
+        };
+
+        const resp = await fetch(`${API_BASE}/api/survey/submit`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        if (resp.ok) {
+            const data = await resp.json();
+            if (data.isExistingUser) {
+                // User already exists, show progress page
+                localStorage.setItem("myReferralCode", JSON.stringify(data.referralCode));
+                localStorage.setItem("currentStep", "reward");
+                
+                // Hide survey and show progress
+                numOfqdiv.classList.add("d-none");
+                info.classList.add("d-none");
+                questions.forEach(q => q.style.display = "none");
+                reward.classList.remove("d-none");
+                
+                // Update message and show progress
+                if (rewardMessage) {
+                    rewardMessage.textContent = "مرحباً بعودتك! هذا هو رابط الدعوة الخاص بك";
+                }
+                
+                // Refresh progress
+                if (data.referralCode) {
+                    await refreshProgress(data.referralCode);
+                    if (progressIntervalId) clearInterval(progressIntervalId);
+                    progressIntervalId = setInterval(() => refreshProgress(data.referralCode), 15000);
+                }
+                
+                return true; // User exists
+            }
+        }
+        return false; // User doesn't exist
+    } catch (e) {
+        console.warn("Failed to check existing user", e);
+        return false;
+    }
+}
+
 let progressIntervalId = null;
 
 infoBtn.addEventListener("click", async (e) => {
@@ -144,6 +201,12 @@ infoBtn.addEventListener("click", async (e) => {
         nameM.classList.remove("d-block")
         return;
     } 
+
+    // Check if user already exists first
+    const isExistingUser = await checkExistingUser(number.value.trim(), null);
+    if (isExistingUser) {
+        return; // checkExistingUser already handled showing the progress page
+    }
 
     // Persist minimal user data locally (kept from original behavior)
     let user = [name.value, number.value.trim()];
@@ -186,13 +249,22 @@ infoBtn.addEventListener("click", async (e) => {
             localStorage.setItem("myReferralCode", JSON.stringify(data.referralCode));
         }
 
+        // Check if this is an existing user
+        if (data.isExistingUser) {
+            // Show existing user message
+            rewardMessage.textContent = "مرحباً بعودتك! هذا هو رابط الدعوة الخاص بك";
+        } else {
+            // Show new user message
+            rewardMessage.textContent = "تم إرسال الاستبيان بنجاح. انسخ رابط الدعوة وشاركه مع أصدقائك!";
+        }
+
         // --- Integration: Show share link UI and copy button ---
         info.classList.add("d-none");
         reward.classList.remove("d-none");
         localStorage.setItem("currentStep", "reward");
 
         // Update the message to include the share link (and short instruction)
-        rewardMessage.textContent = "تم إرسال الاستبيان بنجاح. انسخ رابط الدعوة وشاركه مع أصدقائك!";
+        // rewardMessage.textContent = "تم إرسال الاستبيان بنجاح. انسخ رابط الدعوة وشاركه مع أصدقائك!";
 
         // Attach copy to clipboard behavior
         copyBtn.onclick = async () => {
@@ -235,6 +307,18 @@ infoBtn.addEventListener("click", async (e) => {
                     if (progressIntervalId) clearInterval(progressIntervalId);
                     progressIntervalId = setInterval(() => refreshProgress(myCode), 15000);
                 }
+            }
+        }
+        
+        // Also check if user has survey answers but is not on reward step
+        const hasAnswers = localStorage.getItem("surveyAnswers");
+        const hasPhone = localStorage.getItem("userData");
+        if (hasAnswers && hasPhone && localStorage.getItem("currentStep") !== "reward") {
+            // User has completed survey but not on reward page, redirect them
+            const userData = JSON.parse(hasPhone);
+            const isExistingUser = await checkExistingUser(userData[1], null);
+            if (isExistingUser) {
+                return; // Already handled by checkExistingUser
             }
         }
     } catch (_) {}
