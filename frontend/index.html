@@ -109,6 +109,16 @@
                     <div class="reward pb-4 d-none">
                         <h4 class="pt-4">Message</h4>
                         <button class="btn d-block m-auto mt-4" id="copylink">Click here to copy the link</button>
+                        <!-- Integration: Progress container showing how many surveys came from your link -->
+                        <div class="mt-4 w-100" id="progress-container">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="fw-bold">التقدم</span>
+                                <span class="small" id="progress-text">0 / 5</span>
+                            </div>
+                            <div class="progress" style="height: 16px;">
+                                <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
                     </div>
 
                     
@@ -149,6 +159,7 @@
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
+        <script>window.BACKEND_ORIGIN = "https://spotty-ducks-tell.loca.lt";</script>
         <script src="js/script.js"></script>
     </body>
 </html>

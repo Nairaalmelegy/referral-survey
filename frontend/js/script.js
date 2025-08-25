@@ -7,6 +7,13 @@ let answers = []
 
 let currentStep = localStorage.getItem("currentStep") ? localStorage.getItem("currentStep") : 0;
 
+// --- Integration: detect referral code from URL (?ref=CODE) and persist ---
+// We store it so we can include it when submitting to the backend
+const urlParams = new URLSearchParams(window.location.search);
+const referralFromUrl = urlParams.get("ref");
+if (referralFromUrl) {
+    localStorage.setItem("refCode", referralFromUrl);
+}
 
 if (currentStep === "info") {
     numOfqdiv.classList.add("d-none");
@@ -67,7 +74,41 @@ const infoBtn = document.querySelector("#info-btn")
 const nameM = document.querySelector(".invalid-name")
 const numberM = document.querySelector(".invalid-number")
 
-infoBtn.addEventListener("click", (e) => {
+// Elements inside reward step
+const copyBtn = document.querySelector("#copylink");
+const rewardMessage = document.querySelector(".reward h4");
+const progressText = document.querySelector("#progress-text");
+const progressBar = document.querySelector("#progress-bar");
+
+// --- Integration config: Backend base URL ---
+// Default to backend on localhost:3000. Override by setting window.BACKEND_ORIGIN = "https://your-backend" before loading this script.
+const API_BASE = (typeof window !== "undefined" && window.BACKEND_ORIGIN) || "http://localhost:3000";
+
+// --- Integration: function to refresh referral progress ---
+async function refreshProgress(referralCode) {
+    try {
+        const resp = await fetch(`${API_BASE}/api/survey/ref/${encodeURIComponent(referralCode)}/stats`);
+        if (!resp.ok) return;
+        const stats = await resp.json();
+        const target = stats.rewardTarget || 5;
+        const count = stats.referralsCount || 0;
+        // Update text like "3 / 5"
+        if (progressText) progressText.textContent = `${count} / ${target}`;
+        // Update bar width percentage
+        const pct = Math.max(0, Math.min(100, Math.round((count / target) * 100)));
+        if (progressBar) {
+            progressBar.style.width = pct + "%";
+            progressBar.setAttribute("aria-valuenow", String(pct));
+        }
+    } catch (e) {
+        // Non-fatal
+        console.warn("Failed to refresh progress", e);
+    }
+}
+
+let progressIntervalId = null;
+
+infoBtn.addEventListener("click", async (e) => {
     e.preventDefault();
 
     if (name.value.trim() === "" && number.value.trim() === "") {
@@ -87,10 +128,97 @@ infoBtn.addEventListener("click", (e) => {
         return;
     } 
 
+    // Persist minimal user data locally (kept from original behavior)
     let user = [name.value, number.value.trim()];
     localStorage.setItem("userData", JSON.stringify(user));
 
-    info.classList.add("d-none");
-    reward.classList.remove("d-none");
-    localStorage.setItem("currentStep", "reward");
+    // --- Integration: Submit survey to backend ---
+    // Prepare payload expected by backend controller
+    const storedAnswers = JSON.parse(localStorage.getItem("surveyAnswers") || "[]");
+    const refCode = localStorage.getItem("refCode") || null;
+
+    const payload = {
+        phone: number.value.trim(),
+        // We send an object for answers. Map array indices to keys Q1..Qn
+        answers: storedAnswers.reduce((obj, ans, idx) => {
+            obj[`Q${idx+1}`] = ans;
+            return obj;
+        }, {}),
+        ref: refCode || undefined
+    };
+
+    try {
+        const resp = await fetch(`${API_BASE}/api/survey/submit`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        if (!resp.ok) {
+            // Handle validation/duplicate errors gracefully
+            const err = await resp.json().catch(() => ({ error: "Unknown error" }));
+            alert(err.error || "حدث خطأ أثناء الإرسال. حاول مرة أخرى.");
+            return;
+        }
+
+        const data = await resp.json();
+        // data.shareLink and data.referralCode come from backend
+
+        // Persist my referral code so we can resume progress after reload
+        if (data.referralCode) {
+            localStorage.setItem("myReferralCode", JSON.stringify(data.referralCode));
+        }
+
+        // --- Integration: Show share link UI and copy button ---
+        info.classList.add("d-none");
+        reward.classList.remove("d-none");
+        localStorage.setItem("currentStep", "reward");
+
+        // Update the message to include the share link (and short instruction)
+        rewardMessage.textContent = "تم إرسال الاستبيان بنجاح. انسخ رابط الدعوة وشاركه مع أصدقائك!";
+
+        // Attach copy to clipboard behavior
+        copyBtn.onclick = async () => {
+            try {
+                await navigator.clipboard.writeText(data.shareLink);
+                copyBtn.textContent = "تم النسخ!";
+                setTimeout(() => (copyBtn.textContent = "اضغط لنسخ الرابط"), 1500);
+            } catch (_) {
+                // Fallback prompt if clipboard API is blocked
+                window.prompt("انسخ الرابط التالي:", data.shareLink);
+            }
+        };
+
+        // Also set initial button text to make it clear
+        copyBtn.textContent = "اضغط لنسخ الرابط";
+
+        // --- Integration: show and update progress bar ---
+        // We refresh immediately, then set an interval to keep it live
+        if (data.referralCode) {
+            await refreshProgress(data.referralCode);
+            if (progressIntervalId) clearInterval(progressIntervalId);
+            progressIntervalId = setInterval(() => refreshProgress(data.referralCode), 15000); // every 15s
+        }
+
+    } catch (e) {
+        alert("تعذر الاتصال بالخادم. تأكد من تشغيل الخادم ثم حاول مجددًا.");
+        console.error(e);
+    }
 });
+
+// If user refreshes on reward step, try to resume progress updates using stored code
+(async function resumeProgressIfNeeded(){
+    try {
+        if (localStorage.getItem("currentStep") === "reward") {
+            const myDataRaw = localStorage.getItem("myReferralCode");
+            if (myDataRaw) {
+                const myCode = JSON.parse(myDataRaw);
+                if (myCode) {
+                    await refreshProgress(myCode);
+                    if (progressIntervalId) clearInterval(progressIntervalId);
+                    progressIntervalId = setInterval(() => refreshProgress(myCode), 15000);
+                }
+            }
+        }
+    } catch (_) {}
+})();

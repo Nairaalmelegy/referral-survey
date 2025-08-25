@@ -10,7 +10,7 @@ const submitSchema = z.object({
   ref: z.string().trim().optional(),   // optional referrer code
 });
 
-const REWARD_TARGET = parseInt(process.env.REWARD_TARGET || "20", 10);
+const REWARD_TARGET = parseInt(process.env.REWARD_TARGET || "5", 10);
 const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 
 async function submitSurvey(req, res, next) {
@@ -83,6 +83,8 @@ async function getStats(req, res, next) {
       referredBy: user.referredBy,
       referralsCount: user.referralsCount,
       rewardGiven: user.rewardGiven,
+      // Expose target so frontend can render a progress bar
+      rewardTarget: REWARD_TARGET,
       shareLink: `${BASE_URL}/api/survey/start?ref=${user.referralCode}`,
       createdAt: user.createdAt,
     });
