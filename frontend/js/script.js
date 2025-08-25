@@ -104,8 +104,13 @@ async function refreshProgress(referralCode) {
         const stats = await resp.json();
         const target = stats.rewardTarget || 5;
         const count = stats.referralsCount || 0;
-        // Update text like "3 / 5"
-        if (progressText) progressText.textContent = `${count} / ${target}`;
+        
+        // Update text like "3 / 5 (60%)"
+        if (progressText) {
+            const percentage = Math.round((count / target) * 100);
+            progressText.textContent = `${count} / ${target} (${percentage}%)`;
+        }
+        
         // Update bar width percentage
         const pct = Math.max(0, Math.min(100, Math.round((count / target) * 100)));
         if (progressBar) {
