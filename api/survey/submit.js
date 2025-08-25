@@ -14,14 +14,27 @@ const REWARD_TARGET = parseInt(process.env.REWARD_TARGET || "5", 10);
 const BASE_URL = process.env.BASE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "");
 
 module.exports = async function handler(req, res) {
+  console.log("🔍 Request method:", req.method);
+  console.log("🔍 Request headers:", req.headers);
+  console.log("🔍 Request URL:", req.url);
+  console.log("🔍 Environment check - MONGO_URI:", process.env.MONGO_URI ? "SET" : "NOT SET");
+  console.log("🔍 Environment check - VERCEL_URL:", process.env.VERCEL_URL || "NOT SET");
+  
   withCORS(req, res);
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "POST") return res.status(405).json({ error: "Method Not Allowed" });
 
   try {
+    console.log("🔍 Connecting to database...");
+    if (!process.env.MONGO_URI) {
+      console.error("🔍 MONGO_URI environment variable is not set");
+      return res.status(500).json({ error: "Database configuration missing" });
+    }
     await connectDB(process.env.MONGO_URI);
+    console.log("🔍 Database connected successfully");
 
     const payload = submitSchema.parse(await readJsonBody(req));
+    console.log("🔍 Payload received:", payload);
 
     if (!payload.phone && !payload.email) {
       return res.status(400).json({ error: "Provide at least phone or email." });
