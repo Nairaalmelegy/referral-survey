@@ -8,24 +8,18 @@ const surveyRoutes = require("./routes/survey.routes");
 const app = express();
 
 app.use(helmet());
-app.use(cors());
-// const allowedOrigins = [
-//   "https://referral-survey-phi.vercel.app", // our frontend
-//   "http://localhost:3000", // dev
-// ];
 
-// app.use(
-//   cors({
-//     origin: function (origin, callback) {
-//       if (!origin || allowedOrigins.includes(origin)) {
-//         callback(null, true);
-//       } else {
-//         callback(new Error("Not allowed by CORS"));
-//       }
-//     },
-//     credentials: true,
-//   })
-// );
+
+// ✅ Only allow frontend origin from .env
+const allowedOrigin = process.env.CORS_ORIGIN || "*";
+app.use(
+  cors({
+    origin: allowedOrigin,
+    methods: ["GET", "POST", "OPTIONS"],
+    credentials: true,
+  })
+);
+
 app.use(express.json({ limit: "1mb" }));
 app.use(morgan("dev"));
 
@@ -39,6 +33,8 @@ app.use(
     legacyHeaders: false,
   })
 );
+
+app.options("*", cors());
 
 app.get("/health", (_req, res) => res.json({ ok: true }));
 
