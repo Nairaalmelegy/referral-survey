@@ -1,7 +1,7 @@
 const { withCORS } = require("../_lib/utils");
 
 module.exports = async function handler(req, res) {
-  withCORS(res);
+  withCORS(req, res);
   if (req.method === "OPTIONS") return res.status(200).end();
 
   if (req.method !== "GET") {

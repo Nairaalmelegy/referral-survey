@@ -14,7 +14,7 @@ const REWARD_TARGET = parseInt(process.env.REWARD_TARGET || "5", 10);
 const BASE_URL = process.env.BASE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "");
 
 module.exports = async function handler(req, res) {
-  withCORS(res);
+  withCORS(req, res);
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "POST") return res.status(405).json({ error: "Method Not Allowed" });
 

@@ -35,11 +35,17 @@ async function sendRewardEmail(toEmail, { refCode, count, baseUrl }) {
   console.log("✅ Email sent:", info.messageId);
 }
 
-function withCORS(res) {
-  res.setHeader("Access-Control-Allow-Origin", process.env.CORS_ORIGIN || "*");
-  res.setHeader("Access-Control-Allow-Credentials", "true");
+function withCORS(req, res) {
+  const conf = process.env.CORS_ORIGIN || "*";
+  const origin = conf === "auto" ? (req.headers.origin || "*") : conf;
+  res.setHeader("Access-Control-Allow-Origin", origin);
+  // Only send Allow-Credentials when origin is not wildcard
+  if (origin !== "*") {
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+  }
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Vary", "Origin");
 }
 
 async function readJsonBody(req) {
