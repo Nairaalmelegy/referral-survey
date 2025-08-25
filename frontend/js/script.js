@@ -13,6 +13,15 @@ const urlParams = new URLSearchParams(window.location.search);
 const referralFromUrl = urlParams.get("ref");
 if (referralFromUrl) {
     localStorage.setItem("refCode", referralFromUrl);
+    
+    // Show referral indicator
+    const referralIndicator = document.getElementById("referral-indicator");
+    const referralCodeDisplay = document.getElementById("referral-code-display");
+    if (referralIndicator && referralCodeDisplay) {
+        referralCodeDisplay.textContent = `رمز الدعوة: ${referralFromUrl}`;
+        referralIndicator.classList.remove("d-none");
+        referralIndicator.style.display = "block";
+    }
 }
 
 if (currentStep === "info") {

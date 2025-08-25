@@ -29,7 +29,7 @@ async function sendRewardEmail(toEmail, { refCode, count, baseUrl }) {
     html: `<h2>Congratulations!</h2>
            <p>Your code <b>${refCode}</b> has <b>${count}</b> referrals.</p>
            <p>You earned your reward 🎁.</p>
-           <p>Check stats: <a href="${baseUrl}/api/survey/ref/${refCode}/stats">${baseUrl}/api/survey/ref/${refCode}/stats</a></p>`,
+           <p>Check stats: <a href="${baseUrl}/?ref=${refCode}">${baseUrl}/?ref=${refCode}</a></p>`,
   });
   console.log("✅ Email sent:", info.messageId);
 }

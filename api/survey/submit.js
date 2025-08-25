@@ -70,7 +70,7 @@ module.exports = async function handler(req, res) {
       }
     }
 
-    const shareLink = `${BASE_URL}/api/survey/start?ref=${referralCode}`;
+    const shareLink = `${BASE_URL}/?ref=${referralCode}`;
 
     return res.status(201).json({
       message: "Survey submitted",

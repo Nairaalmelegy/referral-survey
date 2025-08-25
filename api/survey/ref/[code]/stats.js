@@ -23,7 +23,7 @@ module.exports = async function handler(req, res) {
       referralsCount: user.referralsCount,
       rewardGiven: user.rewardGiven,
       rewardTarget: REWARD_TARGET,
-      shareLink: `${BASE_URL}/api/survey/start?ref=${user.referralCode}`,
+      shareLink: `${BASE_URL}/?ref=${user.referralCode}`,
       createdAt: user.createdAt,
     });
   } catch (e) {
