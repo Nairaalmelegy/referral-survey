@@ -146,7 +146,8 @@ display: none;
     border-radius: 10px;
 }
 .sec2{
-    margin-top: -180px;
+    margin-top: -270px !important;
+    padding-bottom: 100px !important;
 }
 .small{
     display: block !important;
