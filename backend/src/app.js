@@ -18,7 +18,11 @@ app.use(helmet());
 //   credentials: true
 // }));
 
-app.use(cors({ origin: "*" }));
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+}));
+
 
 
 app.options("*", cors());
