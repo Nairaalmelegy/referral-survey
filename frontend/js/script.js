@@ -352,7 +352,17 @@ infoBtn.addEventListener("click", async (e) => {
                 progressIntervalId = setInterval(() => refreshProgress(myCode), 15000);
             }
         }
-        ...
+        // Also check if user has survey answers but is not on reward step
+        const hasAnswers = localStorage.getItem("surveyAnswers");
+        const hasPhone = localStorage.getItem("userData");
+        if (hasAnswers && hasPhone && localStorage.getItem("currentStep") !== "reward") {
+            // User has completed survey but not on reward page, redirect them
+            const userData = JSON.parse(hasPhone);
+            const isExistingUser = await checkExistingUser(userData[1], null);
+            if (isExistingUser) {
+                return; // Already handled by checkExistingUser
+            }
+        }
     } catch (_) {}
 })();
 
