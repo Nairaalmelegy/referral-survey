@@ -1,10 +1,9 @@
-const { customAlphabet } = require("nanoid");
 const nodemailer = require("nodemailer");
-
-const nanoid = customAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 8);
+const crypto = require("crypto");
 
 function generateReferralCode() {
-  return nanoid();
+  // Use crypto.randomUUID() which is available in Node.js 18+ and doesn't have module issues
+  return crypto.randomUUID().replace(/-/g, '').substring(0, 8).toUpperCase();
 }
 
 function createTransporter() {
