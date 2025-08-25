@@ -82,7 +82,9 @@ const progressBar = document.querySelector("#progress-bar");
 
 // --- Integration config: Backend base URL ---
 // Default to backend on localhost:3000. Override by setting window.BACKEND_ORIGIN = "https://your-backend" before loading this script.
-const API_BASE = (typeof window !== "undefined" && window.BACKEND_ORIGIN) || "http://localhost:3000";
+const API_BASE_RAW = (typeof window !== "undefined" && window.BACKEND_ORIGIN) || "http://localhost:3000";
+// Normalize to avoid trailing slash (which would cause //api and a redirect on preflight)
+const API_BASE = API_BASE_RAW.replace(/\/+$/, "");
 
 // --- Integration: function to refresh referral progress ---
 async function refreshProgress(referralCode) {
