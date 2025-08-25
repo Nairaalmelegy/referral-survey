@@ -296,30 +296,63 @@ infoBtn.addEventListener("click", async (e) => {
 });
 
 // If user refreshes on reward step, try to resume progress updates using stored code
-(async function resumeProgressIfNeeded(){
+// (async function resumeProgressIfNeeded(){
+//     try {
+//         if (localStorage.getItem("currentStep") === "reward") {
+//             const myDataRaw = localStorage.getItem("myReferralCode");
+//             if (myDataRaw) {
+//                 const myCode = JSON.parse(myDataRaw);
+//                 if (myCode) {
+//                     await refreshProgress(myCode);
+//                     if (progressIntervalId) clearInterval(progressIntervalId);
+//                     progressIntervalId = setInterval(() => refreshProgress(myCode), 15000);
+//                 }
+//             }
+//         }
+        
+//         // Also check if user has survey answers but is not on reward step
+//         const hasAnswers = localStorage.getItem("surveyAnswers");
+//         const hasPhone = localStorage.getItem("userData");
+//         if (hasAnswers && hasPhone && localStorage.getItem("currentStep") !== "reward") {
+//             // User has completed survey but not on reward page, redirect them
+//             const userData = JSON.parse(hasPhone);
+//             const isExistingUser = await checkExistingUser(userData[1], null);
+//             if (isExistingUser) {
+//                 return; // Already handled by checkExistingUser
+//             }
+//         }
+//     } catch (_) {}
+// })();
+
+(async function resumeProgressIfNeeded() {
     try {
         if (localStorage.getItem("currentStep") === "reward") {
             const myDataRaw = localStorage.getItem("myReferralCode");
             if (myDataRaw) {
                 const myCode = JSON.parse(myDataRaw);
-                if (myCode) {
-                    await refreshProgress(myCode);
-                    if (progressIntervalId) clearInterval(progressIntervalId);
-                    progressIntervalId = setInterval(() => refreshProgress(myCode), 15000);
+
+                // Build the share link from stored referral code
+                const shareLink = `https://fadtaxi.com/ref?ref=${myCode}`;
+
+                // Attach copy button behavior here too ✅
+                if (copyBtn) {
+                    copyBtn.onclick = async () => {
+                        try {
+                            await navigator.clipboard.writeText(shareLink);
+                            copyBtn.textContent = "تم النسخ!";
+                            setTimeout(() => (copyBtn.textContent = "اضغط لنسخ الرابط"), 1500);
+                        } catch (_) {
+                            window.prompt("انسخ الرابط التالي:", shareLink);
+                        }
+                    };
                 }
+
+                await refreshProgress(myCode);
+                if (progressIntervalId) clearInterval(progressIntervalId);
+                progressIntervalId = setInterval(() => refreshProgress(myCode), 15000);
             }
         }
-        
-        // Also check if user has survey answers but is not on reward step
-        const hasAnswers = localStorage.getItem("surveyAnswers");
-        const hasPhone = localStorage.getItem("userData");
-        if (hasAnswers && hasPhone && localStorage.getItem("currentStep") !== "reward") {
-            // User has completed survey but not on reward page, redirect them
-            const userData = JSON.parse(hasPhone);
-            const isExistingUser = await checkExistingUser(userData[1], null);
-            if (isExistingUser) {
-                return; // Already handled by checkExistingUser
-            }
-        }
+        ...
     } catch (_) {}
 })();
+
