@@ -10,15 +10,18 @@ const app = express();
 app.use(helmet());
 
 
-// ✅ Only allow frontend origin from .env
-const allowedOrigin = process.env.CORS_ORIGIN || "*";
-app.use(
-  cors({
-    origin: allowedOrigin,
-    methods: ["GET", "POST", "OPTIONS"],
-    credentials: true,
-  })
-);
+
+// Allow your frontend domain explicitly
+// app.use(cors({
+//   origin: "https://referral-survey-f99v4unyp-nairaalmelegys-projects.vercel.app",
+//   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//   credentials: true
+// }));
+
+app.use(cors({ origin: "*" }));
+
+
+app.options("*", cors());
 
 app.use(express.json({ limit: "1mb" }));
 app.use(morgan("dev"));
@@ -34,7 +37,7 @@ app.use(
   })
 );
 
-app.options("*", cors());
+
 
 app.get("/health", (_req, res) => res.json({ ok: true }));
 
